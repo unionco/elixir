@@ -26,7 +26,14 @@ var prefixDirToFiles = function(dir, files) {
     if ( ! Array.isArray(files)) files = [files];
 
     return files.map(function(file) {
-        return dir + '/' + file.replace(dir, '');
+        var output_dir = dir;
+
+        if (file.charAt( 0 ) == '!') {
+            output_dir = '!' + dir;
+            file = file.substring(1);
+        }
+
+        return output_dir + '/' + file.replace(dir, '');
     });
 };
 
