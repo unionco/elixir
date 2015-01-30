@@ -19,7 +19,7 @@ module.exports = function(options) {
     gulp.task(options.pluginName, function() {
         return gulp.src(src)
             .pipe(plugins[options.pluginName](options.pluginOptions)).on('error', onError)
-            .pipe(plugins.autoprefixer())
+	    .pipe(plugins.autoprefixer(options.autoprefixer))
             .pipe(plugins.if(config.production, plugins.minifyCss()))
             .pipe(gulp.dest(options.output || config.cssOutput))
             .pipe(new Notification().message(options.compiler + ' Compiled!'));
