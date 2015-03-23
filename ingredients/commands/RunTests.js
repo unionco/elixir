@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
-var config = require('laravel-elixir').config;
+var config = require('union-elixir').config;
 var Notification = require('./Notification');
 
 module.exports = function(options) {

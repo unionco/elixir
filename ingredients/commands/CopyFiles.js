@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var gulpif = require('gulp-if');
-var config = require('laravel-elixir').config;
+var config = require('union-elixir').config;
 var parsePath = require('parse-filepath');
 var _ = require('underscore');
 

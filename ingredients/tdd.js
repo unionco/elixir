@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var _ = require('underscore');
-var config = require('laravel-elixir').config;
+var config = require('union-elixir').config;
 
 /*
  |----------------------------------------------------------------

@@ -1,4 +1,4 @@
-var elixir = require('laravel-elixir');
+var elixir = require('union-elixir');
 var compile = require('./commands/CompileCSS');
 
 /*
