@@ -35,21 +35,18 @@ var getFilesToWatch = function(request) {
  * @return {void}
  */
 var buildTask = function(request) {
+    var task = request.taskName;
+
     config.concatenate[request.type].push(request);
 
-    config.registerWatcher(request.taskName, getFilesToWatch(request));
-    config.queueTask(request.taskName);
+    gulp.task(task, function() {
+        var files = config.concatenate[request.type];
 
-    gulp.task(request.taskName, function() {
-        var assets = config.concatenate[request.type];
-        var stream;
-
-        assets.forEach(function(set, index) {
-            stream = mergeFileSet(set, index, assets, request);
-        });
-
-        return stream;
+        return mergeFiles(files, request);
     });
+
+    config.registerWatcher(task, getFilesToWatch(request));
+    config.queueTask(task);
 
     return config;
 };
@@ -58,19 +55,31 @@ var buildTask = function(request) {
 /**
  * Use Gulp to merge one set of files.
  *
- * @param  {object}  set
- * @param  {index}   index
- * @param  {assets}  assets
- * @param  {request} request
+ * @param  {array}  files
+ * @param  {object} request
+ * @param  {int}    index
  * @return {object}
  */
-var mergeFileSet = function(set, index, assets, request) {
+var mergeFiles = function(files, request, index) {
+    index = index || 0;
+
+    var set = files[index];
+
     deletePreviouslyMergedFile(set.outputDir + '/' + set.concatFileName);
 
     return gulp.src(set.files)
+               .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
                .pipe(plugins.concat(set.concatFileName))
                .pipe(plugins.if(config.production, request.minifier.call(this)))
-               .pipe(gulp.dest(set.outputDir));
+               .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
+               .pipe(gulp.dest(set.outputDir))
+               .on('end', function() {
+                    index++;
+
+                    if (files[index]) {
+                      mergeFiles(files, request, index);
+                    }
+               });
 };
 
 

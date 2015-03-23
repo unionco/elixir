@@ -1,6 +1,6 @@
 var elixir = require('laravel-elixir');
-var combine = require('./helpers/MergeFiles.js');
-var MergeRequest = require('./helpers/MergeRequest');
+var combine = require('./commands/MergeFiles.js');
+var MergeRequest = require('./commands/MergeRequest');
 
 /*
  |----------------------------------------------------------------
@@ -13,19 +13,19 @@ var MergeRequest = require('./helpers/MergeRequest');
  |
  */
 
-elixir.extend('styles', function(styles, baseDir, outputDir) {
+elixir.extend('styles', function(styles, outputDir, baseDir) {
     outputDir = outputDir || elixir.config.cssOutput;
 
-    return combine(mergeRequest(styles, baseDir, outputDir));
+    return combine(mergeRequest(styles, outputDir, baseDir));
 });
 
 elixir.extend('stylesIn', function(baseDir, outputDir) {
     outputDir = outputDir || baseDir;
 
-    return combine(mergeRequest('**/*.css', baseDir, outputDir));
+    return combine(mergeRequest('**/*.css', outputDir, baseDir));
 });
 
-var mergeRequest = function(styles, baseDir, outputDir) {
+var mergeRequest = function(styles, outputDir, baseDir) {
     var request = new MergeRequest(styles, baseDir, outputDir, 'css');
 
     request.taskName = 'styles';

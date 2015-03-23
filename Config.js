@@ -8,6 +8,7 @@ var config = {
     assetsDir: 'resources/assets/',
     cssOutput: 'public/css',
     jsOutput: 'public/js',
+    sourcemaps: ! util.env.production,
     bowerDir: 'vendor/bower_components',
     tasks: [],
     watchers: { default: {} },
@@ -40,8 +41,7 @@ config.registerWatcher = function(task, search, group) {
  * @param {string} task
  */
 config.queueTask = function(task) {
-    if (this.tasks.indexOf(task) == -1)
-    {
+    if (! _.contains(this.tasks, task)) {
         this.tasks.push(task);
     }
 

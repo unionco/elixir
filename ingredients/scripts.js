@@ -1,6 +1,6 @@
 var elixir = require('laravel-elixir');
-var combine = require('./helpers/MergeFiles.js');
-var MergeRequest = require('./helpers/MergeRequest');
+var combine = require('./commands/MergeFiles.js');
+var MergeRequest = require('./commands/MergeRequest');
 
 /*
  |----------------------------------------------------------------
@@ -13,19 +13,19 @@ var MergeRequest = require('./helpers/MergeRequest');
  |
  */
 
-elixir.extend('scripts', function(scripts, baseDir, outputDir) {
+elixir.extend('scripts', function(scripts, outputDir, baseDir) {
     outputDir = outputDir || elixir.config.jsOutput;
 
-    return combine(mergeRequest(scripts, baseDir, outputDir))
+    return combine(mergeRequest(scripts, outputDir, baseDir));
 });
 
 elixir.extend('scriptsIn', function(baseDir, outputDir) {
     outputDir = outputDir || baseDir;
 
-    return combine(mergeRequest('**/*.js', baseDir, outputDir));
+    return combine(mergeRequest('**/*.js', outputDir, baseDir));
 });
 
-var mergeRequest = function(scripts, baseDir, outputDir) {
+var mergeRequest = function(scripts, outputDir, baseDir) {
     var request = new MergeRequest(scripts, baseDir, outputDir, 'js');
 
     request.taskName = 'scripts';

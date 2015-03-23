@@ -2,8 +2,8 @@ var gulp = require('gulp');
 var elixir = require('laravel-elixir');
 var config = elixir.config;
 var plugins = require('gulp-load-plugins')();
-var utilities = require('./helpers/Utilities');
-var Notification = require('./helpers/Notification');
+var utilities = require('./commands/Utilities');
+var Notification = require('./commands/Notification');
 
 /*
  |----------------------------------------------------------------
@@ -16,7 +16,7 @@ var Notification = require('./helpers/Notification');
  |
  */
 
-elixir.extend('coffee', function(src, output) {
+elixir.extend('coffee', function(src, output, options) {
 
     var assetsDir = this.assetsDir + 'coffee/';
 
@@ -30,8 +30,10 @@ elixir.extend('coffee', function(src, output) {
 
     gulp.task('coffee', function() {
         return gulp.src(src)
-            .pipe(plugins.coffee().on('error', onError))
+            .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
+            .pipe(plugins.coffee(options).on('error', onError))
             .pipe(plugins.if(config.production, plugins.uglify()))
+            .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
             .pipe(gulp.dest(output || config.jsOutput))
             .pipe(new Notification().message('CoffeeScript Compiled!'));
     });
