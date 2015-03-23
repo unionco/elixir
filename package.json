@@ -1,5 +1,5 @@
 {
-  "name": "unionco-laravel-elixir",
+  "name": "union-elixir",
   "version": "0.14.0",
   "description": "Laravel Elixir Core",
   "main": "index.js",
@@ -41,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/btpoe/elixir.git"
+    "url": "https://github.com/unionco/elixir.git"
   },
   "author": "Union",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/btpoe/elixir/issues"
+    "url": "https://github.com/unionco/elixir/issues"
   },
-  "homepage": "https://github.com/btpoe/elixir"
+  "homepage": "https://github.com/unionco/elixir"
 }
