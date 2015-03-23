@@ -1,10 +1,8 @@
-'use strict';
-
-var gulp        = require('gulp'),
-    browserSync = require('browser-sync'),
-    _           = require('underscore'),
-    elixir      = require('union-elixir'),
-    config      = elixir.config;
+var gulp        = require('gulp');
+var elixir      = require('union-elixir');
+var browserSync = require('browser-sync');
+var _           = require('underscore');
+var config      = elixir.config;
 
 elixir.extend('browserSync', function (src, options) {
   var defaultSrc = [

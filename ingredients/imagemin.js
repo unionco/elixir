@@ -1,5 +1,5 @@
-var elixir = require('laravel-elixir');
 var gulp = require('gulp');
+var elixir = require('union-elixir');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var notify = require('gulp-notify');
@@ -18,7 +18,7 @@ var utilities = require('./commands/Utilities');
  |
  */
 
-elixir.extend('images', function(src, output, options) {
+elixir.extend('imagemin', function(src, output, options) {
 
     var config = this;
 
@@ -52,5 +52,4 @@ elixir.extend('images', function(src, output, options) {
     ]);
 
     return this.queueTask('imagemin');
-
 });
