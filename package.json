@@ -1,9 +1,10 @@
 {
   "name": "union-elixir",
-  "version": "0.15.0",
+  "version": "0.16.1",
   "description": "Laravel Elixir Core",
   "main": "index.js",
   "dependencies": {
+    "browser-sync": "^2.2.2",
     "del": "^0.1.3",
     "gulp-autoprefixer": "^1.0.1",
     "gulp-coffee": "^2.2.0",
@@ -35,7 +36,6 @@
     "vinyl-paths": "^1.0.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.2.2",
     "gulp": "^3.8.8"
   },
   "scripts": {
