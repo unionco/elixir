@@ -33,6 +33,7 @@
     "vinyl-paths": "^1.0.0"
   },
   "devDependencies": {
+    "browser-sync": "^2.2.2",
     "gulp": "^3.8.8"
   },
   "scripts": {

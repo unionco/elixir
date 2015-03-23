@@ -3,6 +3,7 @@ var plugins = require('gulp-load-plugins')();
 var config = require('laravel-elixir').config;
 var utilities = require('./Utilities');
 var Notification = require('./Notification');
+var browserSync = require('browser-sync');
 
 module.exports = function(options) {
 
@@ -36,6 +37,8 @@ module.exports = function(options) {
             .pipe(plugins.if(config.production, plugins.minifyCss()))
             .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
             .pipe(gulp.dest(options.output || config.cssOutput))
+	        .pipe(plugins.filter('**/*.css'))
+	        .pipe(browserSync.reload({stream: true}))
             .pipe(new Notification().message(options.compiler + ' Compiled!'));
     });
 
