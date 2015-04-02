@@ -34,11 +34,17 @@ module.exports = function(options) {
     gulp.task(name, function() {
         return triggerSass(src).on('error', onError)
             .pipe(plugins.autoprefixer(options.autoprefixer))
-            .pipe(plugins.if(config.production, plugins.minifyCss()))
             .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
             .pipe(gulp.dest(options.output || config.cssOutput))
 	        .pipe(plugins.filter('**/*.css'))
 	        .pipe(browserSync.reload({stream: true}))
+	        .pipe(plugins.rename(function (currentPath) {
+		        if (currentPath.basename.indexOf('.min') === -1) {
+			        currentPath.basename += '.min';
+		        }
+	        }))
+	        .pipe(plugins.minifyCss())
+	        .pipe(gulp.dest(options.output || config.cssOutput))
             .pipe(new Notification().message(options.compiler + ' Compiled!'));
     });
 
