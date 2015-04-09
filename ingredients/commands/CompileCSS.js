@@ -43,6 +43,7 @@ module.exports = function(options) {
 			        currentPath.basename += '.min';
 		        }
 	        }))
+	        .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
 	        .pipe(plugins.minifyCss())
 	        .pipe(gulp.dest(options.output || config.cssOutput))
             .pipe(new Notification().message(options.compiler + ' Compiled!'));
