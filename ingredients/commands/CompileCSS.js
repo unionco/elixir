@@ -34,6 +34,7 @@ module.exports = function(options) {
     gulp.task(name, function() {
         return triggerSass(src).on('error', onError)
             .pipe(plugins.autoprefixer(options.autoprefixer))
+            .pipe(plugins.pixrem.apply(this, options.pluginOptions.pixrem))
             .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
             .pipe(gulp.dest(options.output || config.cssOutput))
 	        .pipe(plugins.filter('**/*.css'))

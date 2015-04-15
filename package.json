@@ -1,6 +1,6 @@
 {
   "name": "union-elixir",
-  "version": "0.17.1",
+  "version": "0.18.0",
   "description": "Laravel Elixir Core",
   "main": "index.js",
   "dependencies": {
@@ -18,6 +18,7 @@
     "gulp-notify": "^1.8.0",
     "gulp-phpunit": "^0.6.3",
     "gulp-phpspec": "^0.3.1",
+    "gulp-pixrem": "^0.1.4",
     "gulp-rename": "^1.2.0",
     "gulp-rev": "^2.0.1",
     "gulp-sass": "^1.1.0",
@@ -36,7 +37,8 @@
     "vinyl-paths": "^1.0.0"
   },
   "devDependencies": {
-    "gulp": "^3.8.8"
+    "gulp": "^3.8.8",
+    "gulp-pixrem": "^0.1.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

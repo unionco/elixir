@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var config = require('union-elixir').config;
 var plugins = require('gulp-load-plugins')();
 var fs = require('fs');
+var browserSync = require('browser-sync');
 
 /**
  * Delete the merged file from the previous run.
@@ -68,18 +69,26 @@ var mergeFiles = function(files, request, index) {
     deletePreviouslyMergedFile(set.outputDir + '/' + set.concatFileName);
 
     return gulp.src(set.files)
-               .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
-               .pipe(plugins.concat(set.concatFileName))
-               .pipe(plugins.if(config.production, request.minifier.call(this)))
-               .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
-               .pipe(gulp.dest(set.outputDir))
-               .on('end', function() {
-                    index++;
+		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
+		.pipe(plugins.concat(set.concatFileName))
+		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
+	    .pipe(browserSync.reload())
+		.pipe(gulp.dest(set.outputDir))
+		.pipe(plugins.rename(function (currentPath) {
+			if (currentPath.basename.indexOf('.min') === -1) {
+				currentPath.basename += '.min';
+			}
+		}))
+		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
+		.pipe(request.minifier.call(this))
+		.pipe(gulp.dest(set.outputDir))
+		.on('end', function() {
+			index++;
 
-                    if (files[index]) {
-                      mergeFiles(files, request, index);
-                    }
-               });
+			if (files[index]) {
+				mergeFiles(files, request, index);
+			}
+		});
 };
 
 
