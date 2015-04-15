@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var config = require('union-elixir').config;
 var plugins = require('gulp-load-plugins')();
 var fs = require('fs');
-var browserSync = require('browser-sync');
 
 /**
  * Delete the merged file from the previous run.
@@ -72,8 +71,8 @@ var mergeFiles = function(files, request, index) {
 		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
 		.pipe(plugins.concat(set.concatFileName))
 		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
-	    .pipe(browserSync.reload())
 		.pipe(gulp.dest(set.outputDir))
+		.pipe(plugins.filter(['*', '!*.map']))
 		.pipe(plugins.rename(function (currentPath) {
 			if (currentPath.basename.indexOf('.min') === -1) {
 				currentPath.basename += '.min';
