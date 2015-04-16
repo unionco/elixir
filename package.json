@@ -1,6 +1,6 @@
 {
   "name": "btpoe-elixir",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Laravel Elixir Core",
   "main": "index.js",
   "dependencies": {
