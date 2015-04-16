@@ -5,6 +5,7 @@ var _ = require('underscore');
 var config = {
     production: !! util.env.production,
     srcDir: 'app',
+    publicDir: 'public',
     assetsDir: 'resources/assets/',
     cssOutput: 'public/css',
     jsOutput: 'public/js',
@@ -13,7 +14,8 @@ var config = {
     tasks: [],
     watchers: { default: {} },
     duplicate: [],
-    concatenate: { css: [], js: [] }
+    concatenate: { css: [], js: [] },
+    compile: {}
 };
 
 
@@ -32,7 +34,7 @@ config.registerWatcher = function(task, search, group) {
     this.watchers[group][task] = search;
 
     return this;
-}
+};
 
 
 /**
