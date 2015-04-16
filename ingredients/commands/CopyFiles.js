@@ -8,14 +8,14 @@ var _ = require('underscore');
 /**
  * Parse the Gulp source path.
  *
- * @param  {string} source
+ * @param  {string} src
  * @return {object}
  */
 var parseSrc = function(src) {
     var path = parsePath(src);
     var isDir = (path.basename == path.name);
 
-   return _.extend(path, {
+    return _.extend(path, {
         path: src + (isDir ? '/**/*' : ''),
         isDir: isDir
     });
@@ -58,9 +58,13 @@ var buildTask = function() {
 
 
 module.exports = function(src, dest) {
-    config.duplicate.push({
-        src: parseSrc(src),
-        dest: parseDest(dest)
+    src = Array.isArray(src) ? src : [src];
+
+    src.forEach(function(src) {
+        config.duplicate.push({
+            src: parseSrc(src),
+            dest: parseDest(dest)
+        });
     });
 
     buildTask();

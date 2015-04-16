@@ -1,11 +1,13 @@
 var gulp = require('gulp');
 var elixir = require('union-elixir');
+var utilities = require('./commands/Utilities');
+var parsePath = require('parse-filepath');
+var vinylPaths = require('vinyl-paths');
 var rev = require('gulp-rev');
 var del = require('del');
-var utilities = require('./commands/Utilities');
-var vinylPaths = require('vinyl-paths');
 var fs = require('fs');
-var parsePath = require('parse-filepath');
+
+var publicDir = elixir.config.publicDir;
 
 /*
  |----------------------------------------------------------------
@@ -19,7 +21,7 @@ var parsePath = require('parse-filepath');
  */
 
 elixir.extend('version', function(src, buildDir) {
-    src = utilities.prefixDirToFiles('public', src);
+    src = utilities.prefixDirToFiles(publicDir, src);
 
     buildTask(src, buildDir);
 
@@ -42,11 +44,13 @@ var buildTask = function(src, buildDir) {
     gulp.task('version', function() {
         var files = vinylPaths();
 
+        utilities.logTask("Versioning", src);
+
         // To start, we'll clear out the build directory,
         // so that we can start from scratch.
         del.sync(buildDir + '/*', { force: true });
 
-        return gulp.src(src, { base: './public' })
+        return gulp.src(src, { base: './' + publicDir })
             .pipe(gulp.dest(buildDir))
             .pipe(files)
             .pipe(rev())
@@ -73,7 +77,9 @@ var buildTask = function(src, buildDir) {
  * @return {string}
  */
 var getBuildDir = function(buildDir) {
-    return buildDir ? buildDir + '/build' : 'public/build';
+    var baseDir = buildDir || publicDir;
+
+    return baseDir + '/build';
 };
 
 
@@ -101,7 +107,7 @@ var copyMaps = function(src, buildDir) {
     // And then we'll loop over this mapping array
     // and copy each over to the build directory.
     mappings.forEach(function(mapping) {
-        var map = mapping.replace('public', buildDir);
+        var map = mapping.replace(publicDir, buildDir);
 
         gulp.src(mapping).pipe(gulp.dest(parsePath(map).dirname));
     });

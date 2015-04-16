@@ -1,12 +1,14 @@
 var gulp = require('gulp');
 var config = require('union-elixir').config;
 var plugins = require('gulp-load-plugins')();
+var utilities = require('./Utilities');
+var merge = require('merge-stream');
 var fs = require('fs');
 
 /**
  * Delete the merged file from the previous run.
  *
- * @param  {[string]} path
+ * @param  {string} path
  * @return {void}
  */
 var deletePreviouslyMergedFile = function(path) {
@@ -23,9 +25,9 @@ var deletePreviouslyMergedFile = function(path) {
  * @return {array}
  */
 var getFilesToWatch = function(request) {
-    var alreadyBeingWatched = config.watchers.default[request.taskName];
+    var alreadyWatched = config.watchers.default[request.taskName];
 
-    return alreadyBeingWatched ? alreadyBeingWatched.concat(request.files) : request.files;
+    return alreadyWatched ? alreadyWatched.concat(request.files) : request.files;
 };
 
 
@@ -36,36 +38,38 @@ var getFilesToWatch = function(request) {
  */
 var buildTask = function(request) {
     var task = request.taskName;
+    var toConcat = config.concatenate[request.type];
 
-    config.concatenate[request.type].push(request);
+    // So that we may call the styles and scripts methods as
+    // often as we want, we need to store every request.
+    toConcat.push(request);
 
-    gulp.task(task, function() {
-        var files = config.concatenate[request.type];
-
-        return mergeFiles(files, request);
+    gulp.task(task, function () {
+        // And then we'll simply loop over that stored list, and
+        // for each one, trigger Gulp. To keep from crossing
+        // the streams, we'll use the merge-stream plugin.
+        return merge.apply(this, toConcat.map(function (set) {
+            return mergeFileSet(set, request);
+        }));
     });
 
-    config.registerWatcher(task, getFilesToWatch(request));
-    config.queueTask(task);
-
-    return config;
+    return config
+      .registerWatcher(task, getFilesToWatch(request))
+      .queueTask(task);
 };
 
 
 /**
  * Use Gulp to merge one set of files.
  *
- * @param  {array}  files
+ * @param  {object} set
  * @param  {object} request
- * @param  {int}    index
  * @return {object}
  */
-var mergeFiles = function(files, request, index) {
-    index = index || 0;
-
-    var set = files[index];
-
+var mergeFileSet = function (set, request) {
     deletePreviouslyMergedFile(set.outputDir + '/' + set.concatFileName);
+
+    utilities.logTask("Merging", set.files);
 
     return gulp.src(set.files)
 		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
@@ -80,14 +84,7 @@ var mergeFiles = function(files, request, index) {
 		}))
 		.pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.init()))
 		.pipe(request.minifier.call(this))
-		.pipe(gulp.dest(set.outputDir))
-		.on('end', function() {
-			index++;
-
-			if (files[index]) {
-				mergeFiles(files, request, index);
-			}
-		});
+		.pipe(gulp.dest(set.outputDir));
 };
 
 

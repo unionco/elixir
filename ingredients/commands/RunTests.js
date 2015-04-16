@@ -3,23 +3,31 @@ var plugins = require('gulp-load-plugins')();
 var config = require('union-elixir').config;
 var Notification = require('./Notification');
 
-module.exports = function(options) {
+/**
+ * Build the Gulp task.
+ *
+ * @param {object} options
+ */
+var buildTask = function(options) {
+    var name = options.pluginName;
+    var notify = new Notification();
 
-    var onError = function(e) {
-        new Notification().forFailedTests(e, options.framework);
-
-        this.emit('end');
-    };
-
-    gulp.task(options.pluginName, function() {
+    gulp.task(name, function() {
         return gulp.src(options.src)
-            .pipe(plugins[options.pluginName]('', options.pluginOptions))
-            .on('error', onError)
-            .pipe(new Notification().forPassedTests(options.framework));
+            .pipe(plugins[name]('', options.pluginOptions))
+            .on('error', function(e) {
+                notify.forFailedTests(e, options.framework);
+
+                this.emit('end');
+            })
+            .pipe(notify.forPassedTests(options.framework));
     });
 
-    config.registerWatcher(options.pluginName, options.src, 'tdd');
+    return config
+        .registerWatcher(name, options.src, 'tdd')
+        .queueTask(name);
+};
 
-    return config.queueTask(options.pluginName);
-
+module.exports = function(options) {
+    return buildTask(options);
 };
