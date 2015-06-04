@@ -4,6 +4,7 @@ var parsePath = require('parse-filepath');
 var browserify = require('browserify');
 var elixir = require('union-elixir');
 var babelify = require('babelify');
+var literalify = require('literalify');
 var gulp = require('gulp');
 
 
@@ -39,7 +40,8 @@ var buildTask = function(src, output, options) {
 
     gulp.task('browserify', function() {
         return browserify(src, options)
-            .transform(babelify, { stage: 0 })
+            .transform(babelify.configure(options.babelify), { stage: 0 })
+            .transform(literalify.configure(options.literalify))
             .bundle()
             .pipe(source(destination.saveFile))
             .pipe(gulp.dest(destination.saveDir));

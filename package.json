@@ -1,6 +1,6 @@
 {
   "name": "union-elixir",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Laravel Elixir Core",
   "main": "index.js",
   "dependencies": {
@@ -30,6 +30,7 @@
     "gulp-util": "^3.0.1",
     "imagemin-pngquant": "^4.0.0",
     "install": "^0.1.7",
+    "literalify": "^0.4.0",
     "main-bower-files": "^2.4.0",
     "merge-stream": "^0.1.7",
     "npm": "^2.1.9",
