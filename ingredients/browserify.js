@@ -1,5 +1,7 @@
 var utilities = require('./commands/Utilities');
+var plugins = require('gulp-load-plugins')();
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 var parsePath = require('parse-filepath');
 var browserify = require('browserify');
 var elixir = require('union-elixir');
@@ -44,6 +46,15 @@ var buildTask = function(src, output, options) {
             .transform(literalify.configure(options.literalify))
             .bundle()
             .pipe(source(destination.saveFile))
+            .pipe(buffer())
+            .pipe(gulp.dest(destination.saveDir))
+            .pipe(plugins.filter(['*', '!*.map']))
+            .pipe(plugins.rename(function (currentPath) {
+                if (currentPath.basename.indexOf('.min') === -1) {
+                    currentPath.basename += '.min';
+                }
+            }))
+            .pipe(plugins.uglify())
             .pipe(gulp.dest(destination.saveDir));
     });
 };
