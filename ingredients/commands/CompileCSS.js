@@ -57,7 +57,7 @@ var buildTask = function(name, watchPath) {
             utilities.logTask("Running " + options.compiler, src);
 
             return triggerCompiler(src, options)
-	            .pipe(plugins.autoprefixer(options.autoprefixer))
+	            .pipe(plugins.autoprefixer(options.pluginOptions.autoprefixer))
 		        .pipe(plugins.pixrem.apply(this, options.pluginOptions.pixrem))
 		        .pipe(plugins.if(config.sourcemaps, plugins.sourcemaps.write('.')))
 		        .pipe(gulp.dest(options.output || config.cssOutput))
